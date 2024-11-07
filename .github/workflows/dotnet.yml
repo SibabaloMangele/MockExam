@@ -5,44 +5,24 @@ name: MockExam
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
   pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # Use Ubuntu for building .NET
+
+    runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout code from the repository
-      - uses: actions/checkout@v4
-
-      # Step 2: Set up .NET SDK (version 8.0)
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.0.x
-
-      # Step 3: Restore dependencies
-      - name: Restore dependencies
-        run: dotnet restore
-
-      # Step 4: Build the application (no restore, as restore was already done)
-      - name: Build the application
-        run: dotnet build --configuration Release --no-restore
-
-      # Step 5: Run tests
-      - name: Run tests
-        run: dotnet test --configuration Release --no-build --verbosity normal
-
-      # Step 6: Deploy the application (you can modify this for your deployment method)
-      - name: Deploy to Azure (or another deployment platform)
-        if: success()  # Only run deployment if previous steps succeed
-        run: |
-          echo "Deploying the application..."
-          # Replace with your actual deployment command or action
-          # Example for Azure deployment:
-          # az webapp deploy --name <app-name> --resource-group <resource-group> --src-path ./bin/Release/net8.0/publish
-          
-          # For example, deployment via Azure CLI (make sure you have AZ CLI configured in GitHub Secrets)
-          # az webapp deploy --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --name ${{ secrets.AZURE_WEBAPP_NAME }} --src-path ./bin/Release/net8.0/publish
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity norma
